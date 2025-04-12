@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loan Management System</title>
+</head>
+<body>
+  <h2>Loan Management System with Smart Processing</h2>
+  <button onclick="processLoans()">Evaluate Applicants</button>
+
+  <script>
+    // Sample applicants
+    const applicants = [
+      { name: "Aman", income: 50000, loanAmount: 20000, duration: 5 },
+      { name: "Bob", income: 25000, loanAmount: 10000, duration: 3 },
+      { name: "Calem", income: 100, loanAmount: 8000, duration: 4 },
+      { name: "Danat", income: 60000, loanAmount: 30000, duration: 6 }
+    ];
+
+    // Arrow function to check eligibility
+    const isEligible = applicant => applicant.income >= 20000;
+
+    // Arrow function to assign interest rate
+    const getInterestRate = loanAmount => {
+      if (loanAmount <= 10000) return 0.05;
+      else if (loanAmount <= 20000) return 0.07;
+      else return 0.1;
+    };
+
+    // Arrow function to calculate total and monthly payments
+    const calculateRepayments = (loanAmount, interestRate, years) => {
+      const total = loanAmount + (loanAmount * interestRate * years);
+      const monthly = total / (years * 12);
+      return { total: total.toFixed(2), monthly: monthly.toFixed(2) };
+    };
+
+    // Main processing function
+    function processLoans() {
+      let summary = "Approved Applicants:\n\n";
+
+      applicants.forEach(applicant => {
+        if (isEligible(applicant)) {
+          const rate = getInterestRate(applicant.loanAmount);
+          const { total, monthly } = calculateRepayments(applicant.loanAmount, rate, applicant.duration);
+          summary += `${applicant.name} - Loan Approved\n`;
+          summary += `  Interest Rate: ${(rate * 100)}%\n`;
+          summary += `  Total Repayment: $${total}\n`;
+          summary += `  Monthly Payment: $${monthly}\n\n`;
+        } else {
+          summary += `${applicant.name} - Loan Rejected (Low Income)\n\n`;
+        }
+      });
+
+      alert(summary);
+    }
+  </script>
+</body>
+</html>
